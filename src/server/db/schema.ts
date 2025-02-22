@@ -22,8 +22,7 @@ export const propertyTable = createTable(
     userId: varchar("user_id", { length: 256 }).notNull(),
     askingPrice: decimal("asking_price").notNull(),
     commissionRate: decimal("commission_rate").notNull(),
-    description: text("description"),
-    shortLink: text("short_link").unique("short_link_unique")
+    description: text("description")
   },
   (property) => ({
     nameIndex: index("property_id_created_at_idx").on(
