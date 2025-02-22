@@ -78,7 +78,7 @@ export default function PropertyForm(props: PropertyFormProps) {
         <Label htmlFor="description">Description</Label>
         <Textarea id="description" name="description" rows={4} defaultValue={props.initialState?.description ?? ""} readOnly={readOnly} />
       </div>
-      { props.currentUser === props.initialState?.userId && (
+      { !readOnly && (
         <Button type="submit" className="align-self-end" disabled={pending}>{pageMode} Property</Button>
       ) }
     </form>
