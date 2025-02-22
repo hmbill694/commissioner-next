@@ -1,14 +1,14 @@
 "use client"
 import PropertyCard from "./PropertyCard"
 import { Property } from "~/server/db/schema"
-import NothingToSeeHere from "./NothingToSeeHere"
+import NothingToSeeHere from "../../components/shared/NothingToSeeHere"
 import { useMemo, useState } from "react"
 import { useSearchParams } from "next/navigation"
 
 export type PropertyGridProps = {
     properties: Property[]
     notFoundMessage: string
-    viewingUserId?: string
+    currentUser?: string
 }
 
 export default function PropertyGrid(props: PropertyGridProps) {
@@ -38,7 +38,7 @@ export default function PropertyGrid(props: PropertyGridProps) {
                 <PropertyCard 
                     key={property.id}
                     property={property}
-                    showActions={props.viewingUserId === property.userId}
+                    showActions={props.currentUser === property.userId}
                 />)}
             </div>
         </>

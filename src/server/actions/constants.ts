@@ -1,0 +1,1 @@
+export const USER_IS_NOT_LOGGED_IN = "not-logged-in" as const

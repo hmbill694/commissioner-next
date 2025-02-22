@@ -19,13 +19,13 @@ export default function PropertyCard({ property, showActions }: PropertyCardProp
     const [state, deleteFormAction, pending] = useActionState(deleteProperty, initFormState)
 
     return (
-        <Card>
+        <Card className="flex flex-col">
             <CardHeader>
                 <div className="flex justify-between items-center">
                     <CardTitle>{property.name || property.address}</CardTitle>
                 </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1">
                 <p className="text-sm text-gray-500 mb-2">{property.address}</p>
                 <p className="font-semibold mb-1">Asking Price: {property.askingPrice}</p>
                 <p className="text-sm mb-2">Commission Rate: {property.commissionRate}</p>

@@ -1,18 +1,18 @@
-import PropertyGrid from "../components/shared/PropertyGrid";
-import PropertySearch from "./components/PropertySearch";
+import PropertyGrid from "./_components/PropertyGrid";
+import PropertySearch from "./_components/PropertySearch";
 import { getPropertiesForCurrentUser } from "~/server/actions/PropertyActions";
 
 export default async function HomePage() {
-  const { properties, userId } = await getPropertiesForCurrentUser()
+  const { properties, userIsLoggedIn, currentUser } = await getPropertiesForCurrentUser()
 
   return (
     <div className="p-6 h-full">
       <h1 className="text-3xl font-bold mb-4">My Property Dashboard</h1>
-      <PropertySearch currentUserId={userId} />
+      <PropertySearch currentUserId={currentUser} />
       <PropertyGrid
         properties={properties}
         notFoundMessage="Could not find any properties for you at this time."
-        viewingUserId={userId}
+        currentUser={currentUser}
       />
     </div>
   );

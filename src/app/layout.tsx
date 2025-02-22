@@ -2,7 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "~/styles/globals.css"
-import Navbar from "./components/Navbar"
+import Navbar from "./_components/Navbar"
 import {
   ClerkProvider,
 } from '@clerk/nextjs'
