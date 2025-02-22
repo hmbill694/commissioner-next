@@ -7,10 +7,14 @@ import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
 import { Textarea } from "~/components/ui/textarea"
 import { DollarSign, Percent } from "lucide-react"
-import { createProperty } from "~/server/actions/PropertyActions"
 import { formatNumberWithCommas } from "~/lib/utils"
+import { ActionFunction } from "~/server/actions/types"
 
-export default function CreatePropertyForm() {
+export type PropertyFormProps = {
+  action: ActionFunction
+}
+
+export default function PropertyForm(props: PropertyFormProps) {
   const [commissionRate, setCommissionRate] = useState("")
   const [askingPrice, setAskingPrice] = useState("")
 
@@ -35,10 +39,10 @@ export default function CreatePropertyForm() {
   }
 
 
-  const [state, createFormAction, pending] = useActionState(createProperty, { error: ""})
+  const [state, action, pending] = useActionState(props.action, { error: ""})
 
   return (
-    <form action={createFormAction} className="space-y-6 max-w-5xl w-full flex flex-col">
+    <form action={action} className="space-y-6 max-w-5xl w-full flex flex-col">
       { state.error && <div className="space-y-2">Error: {state.error}</div> }
       <div className="space-y-2">
         <Label htmlFor="address">Address</Label>
@@ -66,7 +70,7 @@ export default function CreatePropertyForm() {
         <Label htmlFor="description">Description</Label>
         <Textarea id="description" name="description" rows={4} />
       </div>
-      <Button type="submit" className="align-self-end">Create Property</Button>
+      <Button type="submit" className="align-self-end" disabled={pending}>Create Property</Button>
     </form>
   )
 }

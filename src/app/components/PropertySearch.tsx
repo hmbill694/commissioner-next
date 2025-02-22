@@ -6,9 +6,10 @@ import { Button } from "~/components/ui/button"
 import { Search } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
+import { toast } from "sonner"
 
 export type PropertySearchProps = {
-    showActions?: boolean
+    currentUserId?: string
 }
 
 export default function PropertySearch(props: PropertySearchProps) {
@@ -33,9 +34,15 @@ export default function PropertySearch(props: PropertySearchProps) {
         setParam("q", searchTerm)
     }
 
+    const copyToClipBoard = () => {
+        navigator.clipboard.writeText(`${window.location.origin}${pathname}agent/${props.currentUserId}`).then(() => {
+            toast("Successfully copied link to clipboard.")
+        })
+    }
+
     return (
         <form onSubmit={handleSearch} className="mb-6">
-            <div className="flex gap-2">
+            <div className="flex flex-col md:flex-row gap-2">
                 <Input
                     type="text"
                     name="q"
@@ -50,12 +57,17 @@ export default function PropertySearch(props: PropertySearchProps) {
                 <Button type="submit">
                     <Search className="mr-2 h-4 w-4" /> Search
                 </Button>
-                {props.showActions && (
-                    <Link href="/create-property">
-                        <Button>
-                            Create Property
+                {props.currentUserId && (
+                    <>
+                        <Link href="/create-property">
+                            <Button className="w-full">
+                                Create Property
+                            </Button>
+                        </Link>
+                        <Button onClick={copyToClipBoard}>
+                            Copy link to your properties
                         </Button>
-                    </Link>
+                    </>
                 )}
             </div>
         </form>

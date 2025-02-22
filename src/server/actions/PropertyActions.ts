@@ -4,11 +4,11 @@ import { db } from "../db"
 import { PropertyInsert, propertyTable } from "../db/schema"
 import { eq } from "drizzle-orm"
 import { redirect } from "next/navigation"
-import { currentUser } from '@clerk/nextjs/server'
+import { clerkClient, currentUser } from '@clerk/nextjs/server'
 import { z } from "zod"
 import { cleanNumString } from "~/lib/utils"
+import { PrevState } from "./types"
 
-type PrevState = { error?: string }
 
 export async function deleteProperty(prev: PrevState, form: FormData) {
 
@@ -31,7 +31,20 @@ export async function deleteProperty(prev: PrevState, form: FormData) {
     return redirect("/")
 }
 
-export async function getPropertiesForUser() {
+export async function getPropertiesAndUserDetails(userId: string) {
+    const authClient = await clerkClient()
+    const user = await authClient.users.getUser(userId)
+
+    if (!user) {
+        throw new Error("Could not find user with the requested ID.")
+    }
+
+   const properties = await Result.fromAsync(() => db.select().from(propertyTable).where(eq(propertyTable.userId, userId)))
+
+   return { properties: properties.getOrDefault([]), userId: userId, firstName: user.firstName, lastName: user.lastName }
+}
+
+export async function getPropertiesForCurrentUser() {
    const user = await currentUser()
 
    if (user === null) {
