@@ -14,14 +14,14 @@ import { Property } from "~/server/db/schema"
 export type PropertyFormProps = {
   action: ActionFunction
   initialState?: Property
-  requestingUser: string
+  currentUser: string
 }
 
 export default function PropertyForm(props: PropertyFormProps) {
   const [commissionRate, setCommissionRate] = useState(props.initialState?.commissionRate ?? "")
   const [askingPrice, setAskingPrice] = useState(props.initialState?.askingPrice ?? "")
 
-  const readOnly = props.initialState && props.initialState.userId !== props.requestingUser
+  const readOnly = props.initialState && props.initialState.userId !== props.currentUser
 
   const pageMode = props.initialState ? "Edit" : "Create"
 
@@ -51,6 +51,18 @@ export default function PropertyForm(props: PropertyFormProps) {
   return (
     <form action={action} className="space-y-6 max-w-5xl w-full flex flex-col">
       {state.error && <div className="space-y-2">Error: {state.error}</div>}
+      {readOnly && (
+        <>
+      <div className="space-y-2">
+        <Label htmlFor="address">Address</Label>
+        <Input id="address" name="address" required defaultValue={props.initialState?.address ?? ""} readOnly={readOnly} />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="address">Address</Label>
+        <Input id="address" name="address" required defaultValue={props.initialState?.address ?? ""} readOnly={readOnly} />
+      </div>
+        </>
+      )}
       <input id="id" name="id" value={props.initialState?.id ?? ""} hidden readOnly />
       <div className="space-y-2">
         <Label htmlFor="address">Address</Label>
@@ -78,7 +90,9 @@ export default function PropertyForm(props: PropertyFormProps) {
         <Label htmlFor="description">Description</Label>
         <Textarea id="description" name="description" rows={4} defaultValue={props.initialState?.description ?? ""} readOnly={readOnly} />
       </div>
-      <Button type="submit" className="align-self-end" disabled={pending}>{pageMode} Property</Button>
+      { props.currentUser === props.initialState?.userId && (
+        <Button type="submit" className="align-self-end" disabled={pending}>{pageMode} Property</Button>
+      ) }
     </form>
   )
 }

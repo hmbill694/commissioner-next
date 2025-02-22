@@ -1,14 +1,15 @@
 'use server'
 import { Result } from "~/lib/result"
 import { db } from "../db"
-import { Property, PropertyInsert, propertyTable } from "../db/schema"
+import { PropertyInsert, propertyTable } from "../db/schema"
 import { eq } from "drizzle-orm"
 import { redirect } from "next/navigation"
-import { clerkClient, currentUser } from '@clerk/nextjs/server'
+import { auth, clerkClient, currentUser } from '@clerk/nextjs/server'
 import { z } from "zod"
 import { cleanNumString } from "~/lib/utils"
 import { PrevState } from "./types"
 import { USER_IS_NOT_LOGGED_IN } from "./constants"
+import { Agent } from "http"
 
 
 export async function deleteProperty(prev: PrevState, form: FormData) {
@@ -16,13 +17,13 @@ export async function deleteProperty(prev: PrevState, form: FormData) {
     const propertyId = form.get("id")?.toString()
 
     if (!propertyId) {
-        return { error: "No property ID provided." }
+        throw Error("You tried to delete a Property but did not provide the required information to do so.")
     }
 
     const selectResult = await Result.fromAsync(() => db.select().from(propertyTable).where(eq(propertyTable.id, propertyId)))
 
     if (selectResult.isError()) {
-        return { error: `Could not get Property with ID of ${propertyId}` }
+        throw Error("We were unable to delete the requested property because we have no record of it.")
     }
 
     const [property] = selectResult.getOrThrow()
@@ -60,7 +61,7 @@ export async function getPropertiesForCurrentUser() {
 }
 
 export async function getPropertyById(propertyId: string) {
-    const user = await currentUser()
+    const requestingUser = await currentUser()
 
     const queryResult = await Result.fromAsync(() => db.select().from(propertyTable).where(eq(propertyTable.id, propertyId)))
 
@@ -71,10 +72,38 @@ export async function getPropertyById(propertyId: string) {
     const [propertyData] = queryResult.getOrThrow()
 
     if (!propertyData) {
-        return { error: "Could not find a property with the requested ID." }
+        throw new Error("We could not find the request property.")
     }
 
-    return { property: propertyData, requestingUser: user?.id ?? "user-not-logged-in" }
+    const isAgent = requestingUser?.id === propertyData.userId
+
+    if (!isAgent) {
+        const authClient = await clerkClient()
+
+        const agentData = await authClient.users.getUser(propertyData.userId)
+
+        if (!agentData) {
+            throw new Error("The requested property exists but does not map back to an existing user.")
+        }
+
+        return {
+            property: propertyData,
+            agent: {
+                firstName: agentData.firstName,
+                lastName: agentData.lastName,
+            },
+            currentUser: requestingUser?.id ?? USER_IS_NOT_LOGGED_IN
+        }
+    }
+
+    return {
+        property: propertyData,
+        agent: {
+            firstName: requestingUser?.firstName ?? "",
+            lastName: requestingUser?.lastName ?? "" 
+        },
+        currentUser: requestingUser.id ?? USER_IS_NOT_LOGGED_IN
+    }
 }
 
 const createPropertySchema = z.object({
@@ -122,7 +151,7 @@ export async function createProperty(prev: PrevState, formData: FormData) {
         return { error: "Could not save your Property. Please try again." }
     }
 
-    redirect("/")
+    redirect("/dashboard")
 }
 
 const editPropertySchema = z.object({
@@ -164,5 +193,5 @@ export async function editProperty(prev: PrevState, formData: FormData) {
 
     await db.update(propertyTable).set({ askingPrice: `${askingPrice}`, commissionRate: `${commissionRate}`, ...rest }).where(eq(propertyTable.id, id))
 
-    redirect("/")
+    redirect("/dashboard")
 }
