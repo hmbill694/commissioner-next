@@ -3,6 +3,7 @@ import { LinkIcon, Users, Zap } from "lucide-react"
 import { Button } from "~/components/ui/button"
 import { currentUser } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
+import { ReactNode } from "react"
 
 export default async function LandingPage() {
 
@@ -25,7 +26,7 @@ export default async function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 bg-gray-50 w-full">
+      <section className="py-16 bg-gray-50 w-full px-6">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">Why Choose Commissioner?</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -49,7 +50,7 @@ export default async function LandingPage() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-16">
+      <section className="py-16 px-6">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -86,7 +87,8 @@ export default async function LandingPage() {
   )
 }
 
-function FeatureCard({ icon, title, description }) {
+type FeatureCardProps = { icon: Readonly<ReactNode>, title: string, description: string }
+function FeatureCard({ icon, title, description }: FeatureCardProps) {
   return (
     <div className="flex flex-col items-center text-center p-6 bg-white rounded-lg shadow-md">
       {icon}
@@ -96,7 +98,8 @@ function FeatureCard({ icon, title, description }) {
   )
 }
 
-function StepCard({ number, title, description }) {
+type StepCardProps = { number: number, title: string, description: string }
+function StepCard({ number, title, description }: StepCardProps) {
   return (
     <div className="flex flex-col items-center text-center p-6 bg-white rounded-lg shadow-md">
       <div className="bg-primary text-primary-foreground rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold mb-4">
