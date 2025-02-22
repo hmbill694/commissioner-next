@@ -2,7 +2,7 @@ export type Err = { success: false, error: string }
 export type Ok<T> = { success: true, data: T }
 export type ResultType<T> = Ok<T> | Err
 
-export class Result<T extends any> {
+export class Result<T> {
   private result: ResultType<T>
 
   private constructor(result: ResultType<T>) {
@@ -28,6 +28,7 @@ export class Result<T extends any> {
       const res = await fn()
       return this.Ok(res)
     } catch (e: unknown) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       return this.Err(`${e}`)
     }
   }

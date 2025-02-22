@@ -6,7 +6,7 @@ import { Trash } from "lucide-react"
 import Link from "next/link"
 import { deleteProperty } from "~/server/actions/PropertyActions"
 import { useActionState } from "react"
-import { Property } from "~/server/db/schema"
+import type { Property } from "~/server/db/schema"
 
 interface PropertyCardProps {
     property: Property
@@ -16,13 +16,13 @@ interface PropertyCardProps {
 const initFormState = { error: "" }
 
 export default function PropertyCard({ property, showActions }: PropertyCardProps) {
-    const [state, deleteFormAction, pending] = useActionState(deleteProperty, initFormState)
+    const [, deleteFormAction] = useActionState(deleteProperty, initFormState)
 
     return (
         <Card className="flex flex-col">
             <CardHeader>
                 <div className="flex justify-between items-center">
-                    <CardTitle>{property.name || property.address}</CardTitle>
+                    <CardTitle>{property.name ?? property.address}</CardTitle>
                 </div>
             </CardHeader>
             <CardContent className="flex-1">

@@ -1,13 +1,14 @@
 'use server'
 import { Result } from "~/lib/result"
 import { db } from "../db"
-import { PropertyInsert, propertyTable } from "../db/schema"
+import type { PropertyInsert } from "../db/schema"
+import { propertyTable } from "../db/schema"
 import { eq } from "drizzle-orm"
 import { redirect } from "next/navigation"
-import { auth, clerkClient, currentUser } from '@clerk/nextjs/server'
+import { clerkClient, currentUser } from '@clerk/nextjs/server'
 import { z } from "zod"
 import { cleanNumString } from "~/lib/utils"
-import { PrevState } from "./types"
+import type { PrevState } from "./types"
 import { USER_IS_NOT_LOGGED_IN } from "./constants"
 
 

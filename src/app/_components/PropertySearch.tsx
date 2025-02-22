@@ -35,8 +35,12 @@ export default function PropertySearch(props: PropertySearchProps) {
     }
 
     const copyToClipBoard = () => {
-        navigator.clipboard.writeText(`${window.location.origin}/agent/${props.currentUserId}`).then(() => {
+        navigator.clipboard.writeText(`${window.location.origin}/agent/${props.currentUserId}`)
+        .then(() => {
             toast("Successfully copied link to clipboard.")
+        })
+        .catch(() => {
+            toast("Failed to save to clipboard.")
         })
     }
 

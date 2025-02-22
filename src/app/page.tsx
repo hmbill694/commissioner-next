@@ -3,7 +3,7 @@ import { LinkIcon, Users, Zap } from "lucide-react"
 import { Button } from "~/components/ui/button"
 import { currentUser } from "@clerk/nextjs/server"
 import { redirect } from "next/navigation"
-import { ReactNode } from "react"
+import type { ReactNode } from "react"
 
 export default async function LandingPage() {
 

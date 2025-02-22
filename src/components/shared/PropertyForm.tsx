@@ -8,8 +8,8 @@ import { Label } from "~/components/ui/label"
 import { Textarea } from "~/components/ui/textarea"
 import { DollarSign, Percent } from "lucide-react"
 import { formatNumberWithCommas } from "~/lib/utils"
-import { ActionFunction } from "~/server/actions/types"
-import { Property } from "~/server/db/schema"
+import type { ActionFunction } from "~/server/actions/types"
+import type { Property } from "~/server/db/schema"
 
 export type PropertyFormProps = {
   action: ActionFunction
@@ -51,18 +51,6 @@ export default function PropertyForm(props: PropertyFormProps) {
   return (
     <form action={action} className="space-y-6 max-w-5xl w-full flex flex-col">
       {state.error && <div className="space-y-2">Error: {state.error}</div>}
-      {readOnly && (
-        <>
-      <div className="space-y-2">
-        <Label htmlFor="address">Address</Label>
-        <Input id="address" name="address" required defaultValue={props.initialState?.address ?? ""} readOnly={readOnly} />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="address">Address</Label>
-        <Input id="address" name="address" required defaultValue={props.initialState?.address ?? ""} readOnly={readOnly} />
-      </div>
-        </>
-      )}
       <input id="id" name="id" value={props.initialState?.id ?? ""} hidden readOnly />
       <div className="space-y-2">
         <Label htmlFor="address">Address</Label>

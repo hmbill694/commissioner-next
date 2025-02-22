@@ -1,8 +1,8 @@
 "use client"
 import PropertyCard from "./PropertyCard"
-import { Property } from "~/server/db/schema"
+import type { Property } from "~/server/db/schema"
 import NothingToSeeHere from "../../components/shared/NothingToSeeHere"
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import { useSearchParams } from "next/navigation"
 
 export type PropertyGridProps = {
@@ -12,20 +12,18 @@ export type PropertyGridProps = {
 }
 
 export default function PropertyGrid(props: PropertyGridProps) {
-    const [properties, setProperties] = useState(props.properties)
-
     const searchParams = useSearchParams()
 
     const filteredProperties = useMemo(() => {
         const query = searchParams.get("q")
         if (!query) {
-            return properties
+            return props.properties
         }
 
         const lowercaseQuery = query.toLocaleLowerCase()
 
-        return properties.filter(ele => ele.address.toLowerCase().includes(lowercaseQuery) || ele.name?.toLocaleLowerCase().includes(lowercaseQuery))
-    }, [searchParams.get("q"), setProperties, properties])
+        return props.properties.filter(ele => ele.address.toLowerCase().includes(lowercaseQuery) || ele.name?.toLocaleLowerCase().includes(lowercaseQuery))
+    }, [searchParams, props.properties])
 
     if (filteredProperties.length === 0) {
         return <NothingToSeeHere message={props.notFoundMessage} />

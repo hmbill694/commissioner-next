@@ -1,8 +1,6 @@
-import { Label } from "@radix-ui/react-label";
 import ErrorDisplay from "~/components/shared/ErrorDisplay";
 import PropertyForm from "~/components/shared/PropertyForm";
-import { Input } from "~/components/ui/input";
-import { PageParams } from "~/lib/typeUtils";
+import type { PageParams } from "~/lib/typeUtils";
 import { USER_IS_NOT_LOGGED_IN } from "~/server/actions/constants";
 import { editProperty, getPropertyById } from "~/server/actions/PropertyActions";
 
