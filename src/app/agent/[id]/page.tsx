@@ -1,6 +1,6 @@
 import PropertyGrid from "~/app/_components/PropertyGrid";
 import PropertySearch from "~/app/_components/PropertySearch";
-import { PageParams } from "~/lib/typeUtils";
+import type { PageParams } from "~/lib/typeUtils";
 import { getPropertiesAndAgentDetails } from "~/server/actions/PropertyActions";
 
 export default async function HomePage({ params }: PageParams<{ id?: string }> ){
